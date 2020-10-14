@@ -1,8 +1,9 @@
 'use strict'
-const Basis = require("../../libs/ec/system/Basis").Basis;
 
-const EcDirectory = require("../../libs/ec/common/EcDirectory").EcDirectory;
-const WebClient = require("../../libs/ec/net/WebClient").WebClient;
+const Basis = require("../../../libs/ec/system/Basis").Basis;
+
+const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
+const WebClient = require("../../../libs/ec/net/WebClient").WebClient;
 
 class WebImageSaveProcessor extends  Basis {
 
@@ -16,9 +17,13 @@ class WebImageSaveProcessor extends  Basis {
         const groups = webBook.getGroups();
         if(groups){
             for(var i = 0 ;i < groups.length;i++){
-                this.log(`Save book[${webBook.getName()}] group : ${i+1} / ${groups.length} `);
                 const group = groups[i];
-                await this.saveGroup(bookSavePosDir , group);
+                if(group.getWebImages()) {
+                    this.log(`Save book[${webBook.getName()}] group : ${i+1} / ${groups.length} `);
+                    await this.saveGroup(bookSavePosDir , group);
+                } else {
+                    this.log(`Book[${webBook.getName()}] group : ${i+1} / ${groups.length} has no images , skip it!!`);
+                }
             }
         }
 

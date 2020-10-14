@@ -1,6 +1,6 @@
 'use strict'
 
-const WebBook = require("../../core/WebBook").WebBook;
+const WebBook = require("../../core/entity/WebBook").WebBook;
 const BookImageUrlLoader = require("./BookImageUrlLoader").BookImageUrlLoader;
 class Book extends WebBook {
     

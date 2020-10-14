@@ -1,5 +1,6 @@
 'use strict'
-const Basis = require("../../libs/ec/system/Basis").Basis;
+
+const Basis = require("../../../libs/ec/system/Basis").Basis;
 
 class WebBook extends Basis{
 
@@ -50,6 +51,9 @@ class WebBook extends Basis{
         return this.groups;
     }
 
+    setGroups(groups){
+        this.groups = groups;
+    }
 
     embedWebLoaders(){
         //wait to override

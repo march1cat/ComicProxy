@@ -6,11 +6,12 @@ const StringTool = require("../../../libs/ec/common/StringTool").StringTool;
 const FileTool = require("../../../libs/ec/common/FileTool").FileTool;
 const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 const BookIndex = require("./BookIndex").BookIndex;
+const Book = require('../../parser/mm18h/Book').Book;
 
 
-class BookFactory extends Basis {
+class IndexScanner extends Basis {
 
-    domain = "mm18h";
+    domain = null;
     storageDir = null;
     saveTo = null;
 
@@ -18,8 +19,10 @@ class BookFactory extends Basis {
 
     constructor(){
         super();
+        this.domain = (new Book()).getDomain();
         this.storageDir = new EcDirectory(this.AppConfig().ScanStorage , true);
         this.saveTo = this.storageDir.Uri()  + this.domain + ".txt";
+        
     }
 
     async reloadRecorded(){
@@ -69,4 +72,4 @@ class BookFactory extends Basis {
 }
 
 
-module.exports.BookFactory = BookFactory;
+module.exports.IndexScanner = IndexScanner;

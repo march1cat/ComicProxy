@@ -1,18 +1,21 @@
 'use strict'
 
-const Basis = require("../../libs/ec/system/Basis").Basis;
+const Basis = require("../../../libs/ec/system/Basis").Basis;
 const WebImageSaveProcessor = require("./WebImageSaveProcessor").WebImageSaveProcessor;
 const PackageZipProcessor = require("./PackageZipProcessor").PackageZipProcessor;
+const HistroryRecordProcessor = require("./HistroryRecordProcessor").HistroryRecordProcessor;
 
 class DownloadProcessor extends Basis {
 
     webImageSaveProcessor = null;
     packageZipProcessor = null;
+    histroryRecordProcessor = null;
 
     constructor(){
         super();
         this.webImageSaveProcessor = new WebImageSaveProcessor();
         this.packageZipProcessor = new PackageZipProcessor();
+        this.histroryRecordProcessor = new HistroryRecordProcessor();
     }
 
     async processDownloadBook(webBook){
@@ -22,6 +25,7 @@ class DownloadProcessor extends Basis {
         while(webBook.hasNext()) {
             const webLoader = webBook.next();
             if( webLoader ) {
+                webLoader.setHistoryRecordProc(this.histroryRecordProcessor);
                 try {
                     isParsingSuccess = await webLoader.process();
                 } catch(err){
@@ -39,7 +43,8 @@ class DownloadProcessor extends Basis {
         if(isParsingSuccess) {
             this.log("Prepare save book , Book = "  , webBook.getName());
             await this.webImageSaveProcessor.save(webBook);
-            await this.packageZipProcessor.pack(webBook);
+            if(!this.AppConfig().IsDev) await this.packageZipProcessor.pack(webBook);
+            if(!this.AppConfig().IsDev) await this.histroryRecordProcessor.recordDownload(webBook);
         } else {
             this.log("Parsing fail , skip save process , book = " , webBook.getName());
         }

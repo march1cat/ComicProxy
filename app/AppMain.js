@@ -3,8 +3,8 @@
 const ApplicationMain = require("../libs/ec/system/ApplicationMain").ApplicationMain;
 const Book = require("./parser/mm18h/Book").Book;
 const Group = require("./core/entity/Group").Group;
-const DownloadProcessor = require("./processor/DownloadProcessor").DownloadProcessor;
-const BookFactory = require("./scan/mm18h/BookFactory").BookFactory;
+const DownloadProcessor = require("./core/processor/DownloadProcessor").DownloadProcessor;
+const IndexScanner = require("./scan/mm18h/IndexScanner").IndexScanner;
 
 class AppMain extends ApplicationMain {
 
@@ -26,9 +26,9 @@ class AppMain extends ApplicationMain {
             await downloadProcessor.processDownloadBook(book);
         } else {
             this.log("Scan Mode!!");
-            const fac = new BookFactory();
-            await fac.reloadRecorded();
-            await fac.scan('http://18h.mm-cg.com');
+            const scanner = new IndexScanner();
+            await scanner.reloadRecorded();
+            await scanner.scan('http://18h.mm-cg.com');
         }
         
 

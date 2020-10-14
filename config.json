@@ -2,5 +2,6 @@
     "IsDev" : false ,
     "Storoage" : "/Volumes/64G/Temp/comic/" , 
     "ScanStorage" : "/Volumes/64G/Temp/comic/scan" ,
-    "ZipStorage" : "/Volumes/64G/Temp/comic/zips"
+    "ZipStorage" : "/Volumes/64G/Temp/comic/zips" , 
+    "HistoryRecordStorage" : "/Volumes/64G/Temp/comic/history"
 }

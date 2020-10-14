@@ -1,4 +1,5 @@
 'use strict'
+
 const Basis = require("../../../libs/ec/system/Basis").Basis;
 
 class WebImage extends Basis {

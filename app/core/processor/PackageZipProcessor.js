@@ -1,9 +1,10 @@
 'use strict'
 
-const Basis = require("../../libs/ec/system/Basis").Basis;
-const Zipper = require("../../libs/ec/zip/Zipper").Zipper;
-const FileTool = require("../../libs/ec/common/FileTool").FileTool;
-const EcDirectory = require("../../libs/ec/common/EcDirectory").EcDirectory;
+
+const Basis = require("../../../libs/ec/system/Basis").Basis;
+const Zipper = require("../../../libs/ec/zip/Zipper").Zipper;
+const FileTool = require("../../../libs/ec/common/FileTool").FileTool;
+const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 
 class PackageZipProcessor extends Basis {
 

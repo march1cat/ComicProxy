@@ -1,5 +1,5 @@
 'use strict'
-const WebLoader = require("../../core/WebLoader").WebLoader;
+const WebLoader = require("../../core/entity/WebLoader").WebLoader;
 const WebClient = require("../../../libs/ec/net/WebClient").WebClient;
 const StringTool = require("../../../libs/ec/common/StringTool").StringTool;
 const WebImage = require("../../core/entity/WebImage").WebImage;
@@ -14,7 +14,7 @@ class BookImageUrlLoader extends WebLoader {
 
     async process(){
        this.log("Start BookImageUrlLoader for book = " , this.webBook.getName());
-       const groups = this.webBook.getGroups();
+       let groups = await this.hisRecordProc.filterDoneGroups(this.webBook , this.webBook.getGroups());
        if(groups){
            for(var i = 0;i < groups.length;i++){
              await this.parsingGroup(groups[i] , i);
