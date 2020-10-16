@@ -19,10 +19,9 @@ class AppMain extends ApplicationMain {
             return;
         }  
 
-        if(true || args && args.length > 0){
+        if(args && args.length > 0){
             this.log("Download Mode!!");
             //const url = args.length > 0 ? args[0] : "https://18h.mm-cg.com/18H_5086.html";
-           // const url = args.length > 0 ? args[0] : "https://comicbus.com/html/10574.html";
             const url = args.length > 0 ? args[0] : "https://comicbus.com/html/6997.html";
 
             const parserControl = new ParserController();
