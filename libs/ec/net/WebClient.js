@@ -11,36 +11,37 @@ const StringTool = require('../common/StringTool').StringTool;
 
 class WebClient extends Basis {
 
+
     constructor (logger){
         super(logger);
     }
 
-    async getAsDom (url){
+    async getAsDom (url , disableAutoEncodeUtf8){
         try {
-            var response = await this.get(url);
+            var response = await this.get(url , disableAutoEncodeUtf8);
             return response.document;
         } catch(error){
             throw error;
         }
     }
 
-    async getBody (url){
+    async getBody (url , disableAutoEncodeUtf8){
         try {
-            var response = await this.get(url);
+            var response = await this.get(url , disableAutoEncodeUtf8);
             return response.body;
         } catch(error){
             throw error;
         }
     }
 
-    async get (url){
+    async get (url , disableAutoEncodeUtf8){
         try {
-            var response = await this.httpGet(url);
+            var response = await this.httpGet(url , disableAutoEncodeUtf8);
             const { JSDOM } = jsdom;
             const dom = new JSDOM(response.body);
             return {
                 document : dom.window.document , 
-                body : response.body
+                body : disableAutoEncodeUtf8 ? String(response.body) : response.body
             }
         } catch(error){
             throw error;
@@ -49,11 +50,12 @@ class WebClient extends Basis {
 
 
     //Normal get web page return html
-    httpGet(url){
+    httpGet(url , disableAutoEncodeUtf8){
         return new Promise( 
             (resovle , reject) => {
                 this.log("Prepare connect url[" + decodeURIComponent(url) + "]");
-                request( { url :  url }, 
+                const reqOption = !disableAutoEncodeUtf8 ? {url :  url} : { url :  url , encoding: null}
+                request( reqOption , 
                     (error, response, body) => {
                         if(error) {
                             reject(error);

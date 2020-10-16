@@ -25,7 +25,7 @@ class HistroryRecordProcessor extends Basis {
                 const isRecordExist = group => {
                     return records.includes(group.getUrl());
                 }
-                groups.filter( g => {
+                groups = groups.filter( g => {
                     if(isRecordExist(g)) {
                         this.log(`Group ${g.getUrl()} has been downloaded , remove it !! `);
                         return false;

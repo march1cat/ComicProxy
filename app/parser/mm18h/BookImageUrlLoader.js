@@ -1,6 +1,5 @@
 'use strict'
 const WebLoader = require("../../core/entity/WebLoader").WebLoader;
-const WebClient = require("../../../libs/ec/net/WebClient").WebClient;
 const StringTool = require("../../../libs/ec/common/StringTool").StringTool;
 const WebImage = require("../../core/entity/WebImage").WebImage;
 
@@ -8,8 +7,8 @@ class BookImageUrlLoader extends WebLoader {
 
     stringTool = new StringTool();
 
-    constructor(webBook){
-        super(webBook);
+    constructor(){
+        super();
     }
 
     async process(){
@@ -67,10 +66,7 @@ class BookImageUrlLoader extends WebLoader {
         });
     }
 
-    async connectWeb(url){
-        const client = new WebClient();
-        return await client.get(url);
-    }
+    
 
 
 }

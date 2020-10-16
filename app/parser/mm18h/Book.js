@@ -2,6 +2,7 @@
 
 const WebBook = require("../../core/entity/WebBook").WebBook;
 const BookImageUrlLoader = require("./BookImageUrlLoader").BookImageUrlLoader;
+const Group = require("../../core/entity/Group").Group;
 class Book extends WebBook {
     
     constructor(){
@@ -10,10 +11,17 @@ class Book extends WebBook {
 
     embedWebLoaders(){
         this.webLoaders.push(
-            new BookImageUrlLoader(this)
+            BookImageUrlLoader
         );
     }
 
+    static build(url){
+        const book = new Book();
+        book.setName("test");
+        const g = Group.buildGroup(url);
+        book.addGroup(g);
+        return book;
+    }
 
 }
 

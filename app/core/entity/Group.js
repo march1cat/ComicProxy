@@ -20,6 +20,7 @@ class Group extends Basis {
     }
 
     addWebImage(webImage){
+        if( !webImage.getSerNo() ) webImage.setSerNo(this.webImages.length + 1);
         this.webImages.push(webImage);
     }
 

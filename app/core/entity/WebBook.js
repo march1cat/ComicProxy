@@ -8,9 +8,12 @@ class WebBook extends Basis{
 
     webLoaders = [];
     groups = [];
+    
 
     loaderCursor = 0;
+
     name = null;
+    entryUrl = null;
 
     constructor(domain){
         super();
@@ -36,6 +39,14 @@ class WebBook extends Basis{
 
     setName(name){
         this.name = name;
+    }
+
+    setEntryUrl(url){
+        this.entryUrl = url;
+    }
+
+    getEntryUrl(){
+        return this.entryUrl;
     }
 
     getDomain(){

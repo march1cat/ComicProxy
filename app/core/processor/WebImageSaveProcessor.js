@@ -24,6 +24,7 @@ class WebImageSaveProcessor extends  Basis {
                 } else {
                     this.log(`Book[${webBook.getName()}] group : ${i+1} / ${groups.length} has no images , skip it!!`);
                 }
+                if(this.AppConfig().IsDev) break;
             }
         }
 

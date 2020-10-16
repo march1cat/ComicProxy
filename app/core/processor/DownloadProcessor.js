@@ -23,8 +23,10 @@ class DownloadProcessor extends Basis {
         webBook.embedWebLoaders();
         this.log("Start Process donwload book  , " , webBook.getName());
         while(webBook.hasNext()) {
-            const webLoader = webBook.next();
-            if( webLoader ) {
+            const WebLoaderType = webBook.next();
+            if( WebLoaderType ) {
+                const webLoader = new WebLoaderType();
+                webLoader.setWebBook(webBook);
                 webLoader.setHistoryRecordProc(this.histroryRecordProcessor);
                 try {
                     isParsingSuccess = await webLoader.process();
@@ -38,6 +40,7 @@ class DownloadProcessor extends Basis {
                     break;
                 }
             }
+            await this.hold(3 * 1000);
         }
 
         if(isParsingSuccess) {
