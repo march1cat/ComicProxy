@@ -38,8 +38,13 @@ class WebImageSaveProcessor extends  Basis {
             let image = images[i];
             const saveTo = groupStorageDir.Uri() + image.getSerNo() + ".jpg";
             this.log(`Prepare save image from ${image.getUrl()} to [${saveTo}]  , progress : ${i+1} / ${images.length}`);
-            await client.download(image.getUrl() , saveTo , true);
-            await this.hold(1500);
+            try {
+                await client.download(image.getUrl() , saveTo , true);
+                await this.hold(1500);
+            } catch(err){
+                this.log("Download Fail end group , error = " , err);
+                break;
+            }
             if(this.AppConfig().IsDev  && i >= 3) break;
         }
     }

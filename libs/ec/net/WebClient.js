@@ -89,33 +89,39 @@ class WebClient extends Basis {
                 }
                 if(doDownload){
                     const file = filesys.createWriteStream(saveTo);
-                    var request = null;
-                    const strTool = new StringTool();
-                    const useHttps = strTool.regValidate('https.*?' , url);
-                    if (useHttps){
-                        request = https.get(url, function( response) {
-                            response.pipe(file);
-                            file.on('finish', function() {
-                                file.close(resovle);  // close() is async, call cb after close completes.
-                            });
-                        });
-                    } else {
-                        request = http.get(url, function( response) {
-                            response.pipe(file);
-                            file.on('finish', function() {
-                                file.close(resovle);  // close() is async, call cb after close completes.
-                            });
+                    const streamToFile = function(response){
+                        response.pipe(file);
+                        file.on('finish', function() {
+                            file.close(resovle);  // close() is async, call cb after close completes.
                         });
                     }
+                    const rollbackOnError = function(err){
+                        filesys.unlink(saveTo , () => reject(err));
+                    }
 
+                    const strTool = new StringTool();
+                    const useHttps = strTool.regValidate('https.*?' , url);
+                    let httpTool = useHttps ? https : http;
+                    const request = httpTool.get(url, function( response) {
+                        const errorCodes = [403 , 404];
+                        if(!errorCodes.includes(response.statusCode)){
+                            streamToFile(response);
+                        } else {
+                            rollbackOnError( 
+                                {
+                                    ErrorCode : response.statusCode ,
+                                    Url : url 
+                                } 
+                            );
+                        }
+                    });
+                    
                     if(request != null) {
                         request.on('error' , err => {
-                            filesys.unlink(saveTo);
-                            reject(err);
+                            rollbackOnError(err);
                         });
                     } else {
-                        filesys.unlink(saveTo);
-                        reject(err);
+                        rollbackOnError(`request is null!!`);
                     }
                 } else {
                     resovle();
