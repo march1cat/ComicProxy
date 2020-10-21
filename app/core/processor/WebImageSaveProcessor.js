@@ -11,7 +11,7 @@ class WebImageSaveProcessor extends  Basis {
         super();
     }
 
-    async save(webBook){
+    async save(webBook , histroryRecordProcessor){
         const storageDir = new EcDirectory(`${this.AppConfig().Storoage}`);
         const bookSavePosDir = new EcDirectory(`${storageDir.Uri()}${webBook.getDomain()}/${webBook.getName()}`  , true);
         const groups = webBook.getGroups();
@@ -21,6 +21,8 @@ class WebImageSaveProcessor extends  Basis {
                 if(group.getWebImages()) {
                     this.log(`Save book[${webBook.getName()}] group : ${i+1} / ${groups.length} `);
                     await this.saveGroup(bookSavePosDir , group);
+                     if(!this.AppConfig().IsDev) 
+                        await histroryRecordProcessor.recordDownloadGroup(webBook , group);
                 } else {
                     this.log(`Book[${webBook.getName()}] group : ${i+1} / ${groups.length} has no images , skip it!!`);
                 }

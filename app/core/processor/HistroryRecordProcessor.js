@@ -38,14 +38,18 @@ class HistroryRecordProcessor extends Basis {
     }
 
     recordDownload(webBook){
-        const saveTo = this.hisStorageDir.Uri() + webBook.getDomain() + ".txt";
         const groups = webBook.getGroups();
         if(groups){
             for(var i = 0 ;i < groups.length;i++){
                 const group = groups[i];
-                this.fileTool.writeFile(saveTo , `${group.getUrl().trim()}\r\n` , true);
+                this.recordDownloadGroup(group);
             }
         }
+    }
+
+    recordDownloadGroup(webBook  , group){
+        const saveTo = this.hisStorageDir.Uri() + webBook.getDomain() + ".txt";
+        this.fileTool.writeFile(saveTo , `${group.getUrl().trim()}\r\n` , true);
     }
 }
 

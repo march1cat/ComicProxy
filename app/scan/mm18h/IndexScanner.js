@@ -8,21 +8,23 @@ const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 const BookIndex = require("./BookIndex").BookIndex;
 const Book = require('../../parser/mm18h/Book').Book;
 
-
 class IndexScanner extends Basis {
 
     domain = null;
     storageDir = null;
     saveTo = null;
+    batchSaveTo = null;
 
     recordedUrls = [];
+
+    strTool = new StringTool();
 
     constructor(){
         super();
         this.domain = (new Book()).getDomain();
         this.storageDir = new EcDirectory(this.AppConfig().ScanStorage , true);
         this.saveTo = this.storageDir.Uri()  + this.domain + ".txt";
-        
+        this.batchSaveTo = this.storageDir.Uri()  + this.domain + "_batch_" + this.strTool.sysDate() + ".txt";
     }
 
     async reloadRecorded(){
@@ -46,14 +48,13 @@ class IndexScanner extends Basis {
         const aTags = body.getElementsByTagName("a");
 
         const reg = "18h.mm-cg.com/18H_(.*?).html";
-        const stringTool = new StringTool();
         const fileTool = new FileTool();
         let writeCount = this.recordedUrls.length;
         for(var i = 0 ;i < aTags.length;i++){
             const linkUrl = aTags.item(i).getAttribute("href");
             const title = aTags.item(i).textContent;
             if(linkUrl) {
-                const regDatas = stringTool.regSearch(reg,linkUrl);
+                const regDatas = this.strTool.regSearch(reg,linkUrl);
                 if(regDatas && regDatas.length >= 2) {
                     const bookIndex = new BookIndex();
                     const bookUrl = "https://18h.mm-cg.com/18H_" + regDatas[1] + ".html";
@@ -61,6 +62,7 @@ class IndexScanner extends Basis {
                     bookIndex.setUrl(bookUrl);
                     if(!this.recordedUrls.includes(bookUrl)){
                         fileTool.writeFile(this.saveTo,` ${writeCount + 1} ${bookIndex.getTitle()} ${bookIndex.getUrl()} \r\n` , true);
+                        fileTool.writeFile(this.batchSaveTo,`${bookIndex.getUrl()} \r\n` , true);
                         this.log("Notice book " , title + " " +  bookUrl);
                         writeCount++;
                     }
