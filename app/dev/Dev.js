@@ -8,9 +8,11 @@ class Dev {
     async test(){
        const client = new WebClient();
        try {
-        await client.download("https://img8.8comic.com/3/10574/64/057_373.jpg" , "test.jpg" , true);
+           let client = new WebClient();
+           await client.download("http://10.55.64.89/t.jpg" , "test.jpg" , true);
        } catch(err){
         console.log("err = " , err);
+        console.log("is time out" , err.code == 'ETIMEDOUT');
        }
        
     }
