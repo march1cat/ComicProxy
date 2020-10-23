@@ -1,5 +1,5 @@
 {
-    "IsDev" : false ,
+    "IsDev" : true ,
     "Storoage" : "/Volumes/64G/Temp/comic/storage" , 
     "ScanStorage" : "/Volumes/64G/Temp/comic/scan" ,
     "ZipStorage" : "/Volumes/64G/Temp/comic/zips" , 

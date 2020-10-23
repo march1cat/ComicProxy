@@ -54,7 +54,7 @@ class WebImageSaveProcessor extends  Basis {
             try {
                 await client.download(image.getUrl() , saveTo , true);
             } catch(err){
-                if(err == WebClient.ConnectError.TIME_OUT) {
+                if(err == WebClient.ConnectError.TIME_OUT || err == WebClient.ConnectError.OTHERS) {
                     retryImages.push(image);
                 } else {
                     this.log("Download Fail end group , error = " , err);
