@@ -16,7 +16,8 @@ class GroupImageUrlLoader extends WebLoader {
     //Override
     async process(){
         this.log(`Start parse group image urls from web book[${this.webBook.getName()}]`);
-        const groups = this.webBook.getGroups();
+        const groups = await this.hisRecordProc.filterDoneGroups(this.webBook , this.webBook.getGroups());
+        this.webBook.setGroups(groups);
         if(groups) {
             try {
                 let encryptInfo = null;
@@ -25,10 +26,13 @@ class GroupImageUrlLoader extends WebLoader {
                     this.log("Parsing image urls for link = " , g.getUrl());
                     if(!encryptInfo) encryptInfo = await this.loadBookEncryptedInfo(g);
                     if(encryptInfo){
+                        //if(this.AppConfig().IsDev) this.log("EncryptInfo = " , encryptInfo);
                         this.imageUrlBuilder = new ImageUrlBuilder(this.webBook.getBookCode() , encryptInfo.encryptText , encryptInfo.args);
                         const images = this.analyticGroupImages(g);
-                        if(images) 
+                        if(images) {
                             images.forEach(image => g.addWebImage(image));
+                            this.log(`Group url[${g.getUrl()}] has ${images.length} images`);
+                        }
                     } else {
                         this.log(`Parsing encrypt info for book[${this.webBook.getName()}] fail!! , url = ${g.getUrl()}`);
                         return false;
@@ -50,7 +54,6 @@ class GroupImageUrlLoader extends WebLoader {
         for(let i = 1 ; i < 100; i++){
             let imageUrl = this.imageUrlBuilder.calcurate(group.getSerNo() , i);
             if(imageUrl) {
-                this.log(`Notice image url = ${imageUrl}`);
                 let image = new WebImage(imageUrl);
                 images.push(image);
             }

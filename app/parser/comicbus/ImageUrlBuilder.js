@@ -23,7 +23,7 @@ class ImageUrlBuilder extends Basis{
         let ci = 0; 
         let ps = 0;    
         let ti = this.bookCode; 
-        for (var i = 0; i < 64; i++) { 
+        for (var i = 0; i < groupSerno + 1; i++) { 
             var value1 = this.lc(this.su(cs, i * y + Number(this.calcurateArgs[0].arg1), Number(this.calcurateArgs[0].arg2))); 
             var value2 = this.lc(this.su(cs, i * y + Number(this.calcurateArgs[1].arg1), Number(this.calcurateArgs[1].arg2))); 
             var value3 = this.lc(this.su(cs, i * y + Number(this.calcurateArgs[2].arg1), Number(this.calcurateArgs[2].arg2))); 

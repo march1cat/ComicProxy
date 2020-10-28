@@ -54,7 +54,8 @@ class WebBook extends Basis{
     }
 
     addGroup(group){
-        group.setSerNo(this.groups.length + 1);
+        if(!group.getSerNo()) 
+            group.setSerNo(this.groups.length + 1);
         this.groups.push(group);
     }
 

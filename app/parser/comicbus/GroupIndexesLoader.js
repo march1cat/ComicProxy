@@ -29,18 +29,24 @@ class GroupIndexesLoader extends WebLoader {
                 this.webBook.setName(code);
             }
 
-            let chapterNos =  this.parsingChapterNos(httpResData.body , code);
-            chapterNos.forEach(chapterNo => {
-                const groupUrl = `https://comicbus.live/online/a-${code}.html?ch=${chapterNo}`;
-                this.log("Notice Group Url = " , groupUrl);
-                let g = Group.buildGroup(groupUrl);
-                this.webBook.addGroup(g);
-            })
-            if(chapterNos.length > 0){
-                this.log(`Book [${this.webBook.getName()}]  chapter no amounts = ${chapterNos.length}`);
+            if(this.webBook.getGroups() && this.webBook.getGroups().length > 0){
+                this.log("Run assign group mode!!");
                 return true;
             } else {
-                this.log(`Book [${this.webBook.getName()}] has no chapter!!`);
+                let chapterNos =  this.parsingChapterNos(httpResData.body , code);
+                chapterNos.forEach(chapterNo => {
+                    const groupUrl = `https://comicbus.live/online/a-${code}.html?ch=${chapterNo}`;
+                    this.log("Notice Group Url = " , groupUrl);
+                    let g = Group.buildGroup(groupUrl);
+                    g.setSerNo(chapterNo);
+                    this.webBook.addGroup(g);
+                })
+                if(chapterNos.length > 0){
+                    this.log(`Book [${this.webBook.getName()}]  chapter no amounts = ${chapterNos.length}`);
+                    return true;
+                } else {
+                    this.log(`Book [${this.webBook.getName()}] has no chapter!!`);
+                }
             }
         } catch(err){
             this.log("Load Web Fail , err = " , err);
