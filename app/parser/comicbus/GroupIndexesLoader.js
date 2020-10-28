@@ -29,16 +29,15 @@ class GroupIndexesLoader extends WebLoader {
                 this.webBook.setName(code);
             }
 
-            let maxChapterNo =  this.parsingMaxChapterNo(httpResData.body , code);
-            
-            for(let i = 1 ;i <= maxChapterNo;i++){
-                const groupUrl = `https://comicbus.live/online/a-${code}.html?ch=${i}`;
+            let chapterNos =  this.parsingChapterNos(httpResData.body , code);
+            chapterNos.forEach(chapterNo => {
+                const groupUrl = `https://comicbus.live/online/a-${code}.html?ch=${chapterNo}`;
                 this.log("Notice Group Url = " , groupUrl);
                 let g = Group.buildGroup(groupUrl);
                 this.webBook.addGroup(g);
-            }
-            if(maxChapterNo > 0){
-                this.log(`Book [${this.webBook.getName()}] max chapter no = ${maxChapterNo}`);
+            })
+            if(chapterNos.length > 0){
+                this.log(`Book [${this.webBook.getName()}]  chapter no amounts = ${chapterNos.length}`);
                 return true;
             } else {
                 this.log(`Book [${this.webBook.getName()}] has no chapter!!`);
@@ -68,24 +67,20 @@ class GroupIndexesLoader extends WebLoader {
     }
 
 
-    parsingMaxChapterNo(htmlBody , code){
+    parsingChapterNos(htmlBody , code){
         const ar = htmlBody.split("\r\n");
+        
         const reg = `cview\\('${code}\\-(.*?)\.html',[0-9]*?,[0-9]*?\\)`;
         const results = ar.map(line => {
-            const isMatch = this.strTool.regValidate(reg , line)
+            const isMatch = this.strTool.regValidate(reg , line);
             if(isMatch){
                 const search = this.strTool.regSearch(reg , line);
                 if(search) return search[1];
             }
         }).filter(item => item);
-        let maxChapterNo =  0;
-        results.forEach(element => {
-            if( Number(element) > maxChapterNo ) maxChapterNo = Number(element);
-        });
-        return maxChapterNo;
+        const chapterNos = results.filter( (chapter_no , index) => results.indexOf(chapter_no) == index);
+        return chapterNos;
     }
-
-
 
 }
 
