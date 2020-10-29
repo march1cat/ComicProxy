@@ -1,14 +1,18 @@
 'use strict'
 const Basis = require("../libs/ec/system/Basis").Basis;
-
+const StringTool = require("../libs/ec/common/StringTool").StringTool;
 class ProcessJobBuilder extends Basis {
 
+    
     static ProcessJob = {
         Download : "Download" , 
         Scan : "Scan" , 
         BatchDownload : "BatchDownload" , 
-        RunDevCode : "RunDevCode"
+        RunDevCode : "RunDevCode" , 
+        ZipIndex : "ZipIndex"
     }
+
+    stringTool = new StringTool();
 
     constructor(){super()}
 
@@ -20,6 +24,8 @@ class ProcessJobBuilder extends Basis {
         if(procArgs && procArgs.length > 0){
             if(procArgs[0] == 'scan') {
                 return ProcessJobBuilder.ProcessJob.Scan;
+            } else if(this.stringTool.isNumber(procArgs[0])){
+                return ProcessJobBuilder.ProcessJob.ZipIndex;
             }
         }
 

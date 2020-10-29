@@ -18,6 +18,7 @@ class Book extends WebBook {
     static build(url){
         const book = new Book();
         book.setName("test");
+        book.setEntryUrl(url);
         const g = Group.buildGroup(url);
         book.addGroup(g);
         return book;

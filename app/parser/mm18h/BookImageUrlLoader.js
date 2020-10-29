@@ -13,7 +13,7 @@ class BookImageUrlLoader extends WebLoader {
 
     async process(){
        this.log("Start BookImageUrlLoader for book = " , this.webBook.getName());
-       let groups = await this.hisRecordProc.filterDoneGroups(this.webBook , this.webBook.getGroups());
+       let groups = this.webBook.getGroups();
        if(groups){
            for(var i = 0;i < groups.length;i++){
              await this.parsingGroup(groups[i] , i);

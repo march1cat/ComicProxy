@@ -10,3 +10,5 @@
     * node .
 * batch download
     * node . $batch_file_name (batch_file_name : txt file)
+* zip mode
+    * node . $index_id

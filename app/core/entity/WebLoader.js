@@ -6,7 +6,6 @@ const WebClient = require("../../../libs/ec/net/WebClient").WebClient;
 class WebLoader extends Basis {
 
     webBook = null;
-    hisRecordProc = null;
     
     constructor(){
         super();
@@ -19,10 +18,6 @@ class WebLoader extends Basis {
 
     setWebBook(webBook){
         this.webBook = webBook;
-    }
-
-    setHistoryRecordProc (hisRecordProc){
-        this.hisRecordProc = hisRecordProc;
     }
 
     async connectWeb(url , disableAutoEncodeUtf8){

@@ -7,7 +7,7 @@ const FileTool = require("../../../libs/ec/common/FileTool").FileTool;
 const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 const BookIndex = require("./BookIndex").BookIndex;
 const Book = require('../../parser/mm18h/Book').Book;
-
+const WorkSpace = require("../../core/env/WorkSpace").WorkSpace;
 class IndexScanner extends Basis {
 
     domain = null;
@@ -22,7 +22,7 @@ class IndexScanner extends Basis {
     constructor(){
         super();
         this.domain = (new Book()).getDomain();
-        this.storageDir = new EcDirectory(this.AppConfig().ScanStorage , true);
+        this.storageDir = WorkSpace.target.getScanDirectory();
         this.saveTo = this.storageDir.Uri()  + this.domain + ".txt";
         this.batchSaveTo = this.storageDir.Uri()  + this.domain + "_batch_" + this.strTool.sysDate() + ".txt";
     }

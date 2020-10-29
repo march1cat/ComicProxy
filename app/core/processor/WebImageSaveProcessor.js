@@ -4,7 +4,7 @@ const Basis = require("../../../libs/ec/system/Basis").Basis;
 
 const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 const WebClient = require("../../../libs/ec/net/WebClient").WebClient;
-
+const WorkSpace = require("../env/WorkSpace").WorkSpace;
 class WebImageSaveProcessor extends  Basis {
 
     constructor(){
@@ -12,8 +12,7 @@ class WebImageSaveProcessor extends  Basis {
     }
 
     async save(webBook , histroryRecordProcessor){
-        const storageDir = new EcDirectory(`${this.AppConfig().Storoage}`);
-        const bookSavePosDir = new EcDirectory(`${storageDir.Uri()}${webBook.getDomain()}/${webBook.getName()}`  , true);
+        const bookSavePosDir = new EcDirectory(`${WorkSpace.target.getStorageDirectory().Uri()}${webBook.getDomain()}/${webBook.getName()}`  , true);
         const groups = webBook.getGroups();
         if(groups){
             for(var i = 0 ;i < groups.length;i++){
@@ -30,7 +29,7 @@ class WebImageSaveProcessor extends  Basis {
                         }
                     }
                     if(retryImages.length == 0){
-                        if(!this.AppConfig().IsDev) 
+                        if( WorkSpace.target.isEnableWriteHistory()) 
                             await histroryRecordProcessor.recordDownloadGroup(webBook , group);
                     }
                 } else {
@@ -38,6 +37,8 @@ class WebImageSaveProcessor extends  Basis {
                 }
                 if(this.AppConfig().IsDev) break;
             }
+        } else {
+            this.log("Web book has no group to save , skip it!!");
         }
 
     }

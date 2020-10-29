@@ -4,18 +4,21 @@ const Basis = require("../../../libs/ec/system/Basis").Basis;
 const WebImageSaveProcessor = require("./WebImageSaveProcessor").WebImageSaveProcessor;
 const PackageZipProcessor = require("./PackageZipProcessor").PackageZipProcessor;
 const HistroryRecordProcessor = require("./HistroryRecordProcessor").HistroryRecordProcessor;
-
+const WebIndexProcessor = require("./WebIndexProcessor").WebIndexProcessor;
+const WorkSpace = require("../env/WorkSpace").WorkSpace;
 class DownloadProcessor extends Basis {
 
     webImageSaveProcessor = null;
     packageZipProcessor = null;
     histroryRecordProcessor = null;
+    webIndexProcessor = null;
 
     constructor(){
         super();
         this.webImageSaveProcessor = new WebImageSaveProcessor();
         this.packageZipProcessor = new PackageZipProcessor();
         this.histroryRecordProcessor = new HistroryRecordProcessor();
+        this.webIndexProcessor = new WebIndexProcessor();
     }
 
     async processDownloadBook(webBook){
@@ -25,9 +28,10 @@ class DownloadProcessor extends Basis {
         while(webBook.hasNext()) {
             const WebLoaderType = webBook.next();
             if( WebLoaderType ) {
+                const groupCodeBefore = webBook.getGroupEncryption();
+
                 const webLoader = new WebLoaderType();
                 webLoader.setWebBook(webBook);
-                webLoader.setHistoryRecordProc(this.histroryRecordProcessor);
                 try {
                     isParsingSuccess = await webLoader.process();
                 } catch(err){
@@ -39,6 +43,14 @@ class DownloadProcessor extends Basis {
                     this.log("Parsing Fail ,  Loader = " , webLoader);
                     break;
                 }
+
+                const groupCodeAfter = webBook.getGroupEncryption();
+
+                if(groupCodeBefore != groupCodeAfter) {
+                    this.log("Notice Web book group changed , start filter process");
+                    const groups = await this.histroryRecordProcessor.filterDoneGroups( webBook , webBook.getGroups());
+                    webBook.setGroups(groups);
+                }
             }
             await this.hold(3 * 1000);
         }
@@ -46,7 +58,11 @@ class DownloadProcessor extends Basis {
         if(isParsingSuccess) {
             this.log("Prepare save book , Book = "  , webBook.getName());
             await this.webImageSaveProcessor.save(webBook , this.histroryRecordProcessor);
-            if(!this.AppConfig().IsDev) await this.packageZipProcessor.pack(webBook);
+
+            const webIndex = await this.webIndexProcessor.buildIndexByBook(webBook);
+            this.webIndexProcessor.record(webIndex);
+
+            if( WorkSpace.target.isEnableZipPack() ) await this.packageZipProcessor.pack(webIndex);
         } else {
             this.log("Parsing fail , skip save process , book = " , webBook.getName());
         }

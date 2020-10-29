@@ -16,8 +16,7 @@ class GroupImageUrlLoader extends WebLoader {
     //Override
     async process(){
         this.log(`Start parse group image urls from web book[${this.webBook.getName()}]`);
-        const groups = await this.hisRecordProc.filterDoneGroups(this.webBook , this.webBook.getGroups());
-        this.webBook.setGroups(groups);
+        const groups = this.webBook.getGroups();
         if(groups) {
             try {
                 let encryptInfo = null;
@@ -26,7 +25,6 @@ class GroupImageUrlLoader extends WebLoader {
                     this.log("Parsing image urls for link = " , g.getUrl());
                     if(!encryptInfo) encryptInfo = await this.loadBookEncryptedInfo(g);
                     if(encryptInfo){
-                        //if(this.AppConfig().IsDev) this.log("EncryptInfo = " , encryptInfo);
                         this.imageUrlBuilder = new ImageUrlBuilder(this.webBook.getBookCode() , encryptInfo.encryptText , encryptInfo.args);
                         const images = this.analyticGroupImages(g);
                         if(images) {

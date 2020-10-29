@@ -67,6 +67,15 @@ class WebBook extends Basis{
         this.groups = groups;
     }
 
+    getGroupEncryption(){
+        let values = [];
+        this.groups.forEach( group => {
+            values.push(group.getSerNo());
+            values.push(group.getWebImages().length);
+        });
+        return values.join("");
+    }
+
     embedWebLoaders(){
         //wait to override
     }
