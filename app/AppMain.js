@@ -22,7 +22,7 @@ class AppMain extends ApplicationMain {
 
         let jobBuilder = new ProcessJobBuilder();
         let processJob = jobBuilder.buildProcessJob(args);
-        //if( this.AppConfig().IsDev ) processJob = ProcessJobBuilder.ProcessJob.Download;
+        if( this.AppConfig().IsDev ) processJob = ProcessJobBuilder.ProcessJob.Download;
 
         switch (processJob) {
             case ProcessJobBuilder.ProcessJob.RunDevCode:
@@ -46,7 +46,8 @@ class AppMain extends ApplicationMain {
                 break;
             default : 
                 this.log("Download Mode!!");
-                const url = args.length > 0 ? args[0] : "https://18h.mm-cg.com/18H_5086.html";
+                //const url = args.length > 0 ? args[0] : "https://18h.mm-cg.com/18H_5086.html";
+                const url = args.length > 0 ? args[0] : "https://comicbus.com/html/6997.html";
                 //const url = args.length > 0 ? args[0] : "https://comicbus.com/html/6997.html";
                 await (new Downloader()).download(url);
         }
