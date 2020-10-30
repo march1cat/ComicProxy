@@ -5,6 +5,7 @@ const WebImageSaveProcessor = require("./WebImageSaveProcessor").WebImageSavePro
 const PackageZipProcessor = require("./PackageZipProcessor").PackageZipProcessor;
 const HistroryRecordProcessor = require("./HistroryRecordProcessor").HistroryRecordProcessor;
 const WebIndexProcessor = require("./WebIndexProcessor").WebIndexProcessor;
+const BookMetaProcessor = require("./BookMetaProcessor").BookMetaProcessor;
 const WorkSpace = require("../env/WorkSpace").WorkSpace;
 class DownloadProcessor extends Basis {
 
@@ -12,6 +13,7 @@ class DownloadProcessor extends Basis {
     packageZipProcessor = null;
     histroryRecordProcessor = null;
     webIndexProcessor = null;
+    bookMetaProcessor = null;
 
     constructor(){
         super();
@@ -19,6 +21,7 @@ class DownloadProcessor extends Basis {
         this.packageZipProcessor = new PackageZipProcessor();
         this.histroryRecordProcessor = new HistroryRecordProcessor();
         this.webIndexProcessor = new WebIndexProcessor();
+        this.bookMetaProcessor = new BookMetaProcessor();
     }
 
     async processDownloadBook(webBook){
@@ -58,6 +61,7 @@ class DownloadProcessor extends Basis {
         if(isParsingSuccess) {
             this.log("Prepare save book , Book = "  , webBook.getName());
             await this.webImageSaveProcessor.save(webBook , this.histroryRecordProcessor);
+            if( WorkSpace.target.isEnableRecordMeta() ) this.bookMetaProcessor.recordNew(webBook);
 
             const webIndex = await this.webIndexProcessor.buildIndexByBook(webBook);
             this.webIndexProcessor.record(webIndex);

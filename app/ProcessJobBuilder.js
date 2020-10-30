@@ -9,7 +9,8 @@ class ProcessJobBuilder extends Basis {
         Scan : "Scan" , 
         BatchDownload : "BatchDownload" , 
         RunDevCode : "RunDevCode" , 
-        ZipIndex : "ZipIndex"
+        ZipIndex : "ZipIndex" , 
+        Help : "Help"
     }
 
     stringTool = new StringTool();
@@ -26,6 +27,8 @@ class ProcessJobBuilder extends Basis {
                 return ProcessJobBuilder.ProcessJob.Scan;
             } else if(this.stringTool.isNumber(procArgs[0])){
                 return ProcessJobBuilder.ProcessJob.ZipIndex;
+            } else if(procArgs[0] == 'help') {
+                return ProcessJobBuilder.ProcessJob.Help;
             }
         }
 

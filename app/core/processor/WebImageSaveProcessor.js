@@ -54,6 +54,7 @@ class WebImageSaveProcessor extends  Basis {
             this.log(`Prepare save image from ${image.getUrl()} to [${saveTo}]  , progress : ${i+1} / ${images.length}`);
             try {
                 await client.download(image.getUrl() , saveTo , true);
+                group.plusAvailableImage(1);
             } catch(err){
                 if(err == WebClient.ConnectError.TIME_OUT || err == WebClient.ConnectError.OTHERS) {
                     retryImages.push(image);
@@ -63,7 +64,7 @@ class WebImageSaveProcessor extends  Basis {
                 }
             }
             await this.hold(1500);
-            if(this.AppConfig().IsDev  && i >= 3) break;
+            if(this.AppConfig().IsDev  && i >= 2) break;
         }
         return retryImages;
     }

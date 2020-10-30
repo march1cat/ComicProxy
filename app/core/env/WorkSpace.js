@@ -16,6 +16,7 @@ class WorkSpace extends Basis {
 
     enableWriteHistory = true;
     enableZipPack = true;
+    enableRecordMeta = true;
 
     indexFile = null;
 
@@ -23,6 +24,7 @@ class WorkSpace extends Basis {
         super();
         this.enableWriteHistory = !this.AppConfig().IsDev;
         this.enableZipPack = !this.AppConfig().IsDev;
+        this.enableRecordMeta = !this.AppConfig().IsDev;
     }
 
     static init(workspace){
@@ -71,6 +73,10 @@ class WorkSpace extends Basis {
 
     isEnableZipPack(){
         return this.enableZipPack;
+    }
+
+    isEnableRecordMeta(){
+        return this.enableRecordMeta;
     }
 
 }

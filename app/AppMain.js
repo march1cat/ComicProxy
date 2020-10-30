@@ -4,6 +4,7 @@ const ApplicationMain = require("../libs/ec/system/ApplicationMain").Application
 const ProcessJobBuilder = require("./ProcessJobBuilder").ProcessJobBuilder;
 const Downloader = require("./modules/Downloader").Downloader;
 const BatchDownloader = require("./modules/BatchDownloader").BatchDownloader;
+const AppHelper = require("./modules/AppHelper").AppHelper;
 const Scanner = require("./modules/Scanner").Scanner;
 const WorkSpace = require("./core/env/WorkSpace").WorkSpace;
 const IndexZipper = require("./modules/IndexZipper").IndexZipper;
@@ -39,14 +40,16 @@ class AppMain extends ApplicationMain {
                 this.log("Zip Index Mode!!");
                 await (new IndexZipper()).start(args[0]);
                 break;
+            case ProcessJobBuilder.ProcessJob.Help:
+                this.log("App Help Mode!!");
+                (new AppHelper()).start();
+                break;
             default : 
                 this.log("Download Mode!!");
                 const url = args.length > 0 ? args[0] : "https://18h.mm-cg.com/18H_5086.html";
                 //const url = args.length > 0 ? args[0] : "https://comicbus.com/html/6997.html";
-                const downloader = new Downloader();
-                await downloader.download(url);
+                await (new Downloader()).download(url);
         }
-        
     }
 
     

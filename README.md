@@ -12,3 +12,5 @@
     * node . $batch_file_name (batch_file_name : txt file)
 * zip mode
     * node . $index_id
+* show all support website & sample
+    * node . help

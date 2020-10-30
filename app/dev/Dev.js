@@ -6,20 +6,26 @@ class Dev {
     strTool = new StringTool();
 
     async test(){
-       const client = new WebClient();
-       try {
-           const WebBook = require("../parser/comicbus/Book").Book;
-           const Group = require("../core/entity/Group").Group;
-           let g = Group.buildGroup("https://comicbus.live/online/a-11313.html?ch=66");
-           g.setSerNo(66);
-           let book = WebBook.build("https://www.comicbus.com/html/11313.html");
-           book.addGroup(g);
-           const downloadProcessor = new DownloadProcessor();
-           await downloadProcessor.processDownloadBook(book);
-       } catch(err){
-        console.log("err = " , err);
-        console.log("is time out" , err.code == 'ETIMEDOUT');
+       let p2 = new Promise(
+           resolve => {
+               resolve(2);
+           }
+       );
+       let p1 = new Promise(
+           resolve => {
+               resolve(1);
+           }
+       )
+
+
+       let aa = function(){
+           console.log("aa");
+           return "1"
        }
+
+       
+       console.log(pipe);
+
        
     }
 

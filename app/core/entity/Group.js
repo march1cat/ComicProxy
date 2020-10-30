@@ -6,6 +6,7 @@ class Group extends Basis {
     url = null;
     serno = null;
     webImages = [];
+    availableImageSize = 0;
 
     constructor(){
         super();
@@ -34,6 +35,14 @@ class Group extends Basis {
 
     getSerNo(){
         return this.serno;
+    }
+
+    plusAvailableImage(size){
+        this.availableImageSize += size;
+    }
+
+    getAvailableImageSize(){
+        return this.availableImageSize;
     }
 
     static buildGroup(url){

@@ -2,7 +2,6 @@
 
 
 const Basis = require("../../../libs/ec/system/Basis").Basis;
-const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 const FileTool = require("../../../libs/ec/common/FileTool").FileTool;
 const StringTool = require("../../../libs/ec/common/StringTool").StringTool;
 const WorkSpace = require("../env/WorkSpace").WorkSpace;
