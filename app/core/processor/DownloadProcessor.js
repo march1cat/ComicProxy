@@ -28,6 +28,10 @@ class DownloadProcessor extends Basis {
         let isParsingSuccess = true;
         webBook.embedWebLoaders();
         this.log("Start Process donwload book  , " , webBook.getName());
+
+
+        
+
         while(webBook.hasNext()) {
             const WebLoaderType = webBook.next();
             if( WebLoaderType ) {
@@ -57,14 +61,14 @@ class DownloadProcessor extends Basis {
             }
             await this.hold(3 * 1000);
         }
-
         if(isParsingSuccess) {
-            this.log("Prepare save book , Book = "  , webBook.getName());
-            await this.webImageSaveProcessor.save(webBook , this.histroryRecordProcessor);
-            if( WorkSpace.target.isEnableRecordMeta() ) this.bookMetaProcessor.recordNew(webBook);
-
             const webIndex = await this.webIndexProcessor.buildIndexByBook(webBook);
             this.webIndexProcessor.record(webIndex);
+        }
+        
+        if(isParsingSuccess) {
+            this.log("Prepare save book , Book = "  , webBook.getName());
+            await this.webImageSaveProcessor.save(webBook , this.histroryRecordProcessor , this.bookMetaProcessor);
 
             if( WorkSpace.target.isEnableZipPack() ) await this.packageZipProcessor.pack(webIndex);
         } else {

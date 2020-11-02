@@ -12,19 +12,13 @@ class BookMetaProcessor extends Basis {
 
     constructor(){super();}
 
-    recordNew( webBook ){
+    recordNew( webBook , group){
         const groups = webBook.getGroups();
-        if(groups.length > 0){
-            this.log(`Start record meta ,  book[${webBook.getName()}]  , group size = ${groups.length}`);
-            const saveTo = WorkSpace.target.getStorageDirectory().Uri() + webBook.getDomain() + "/" + webBook.getName() + "/meta.txt";
-            const currDate = this.strTool.sysDate();
-            for(let i = 0; i < groups.length;i++){
-                const content = `${currDate} ${groups[i].getSerNo()} ${groups[i].getUrl()} ${groups[i].getAvailableImageSize()}`;
-                this.fileTool.writeFile(saveTo , content + "\r\n" , true);
-            }
-        } else {
-            this.log(`No New group from [${webBook.getName()}] need to add to book meta , skip it`);
-        }
+        this.log(`Start record meta ,  book[${webBook.getName()}]  , group series = ${group.getSerNo()}`);
+        const saveTo = WorkSpace.target.getStorageDirectory().Uri() + webBook.getDomain() + "/" + webBook.getName() + "/meta.txt";
+        const currDate = this.strTool.sysDate();
+        const content = `${currDate} ${group.getSerNo()} ${group.getUrl()} ${group.getAvailableImageSize()}`;
+        this.fileTool.writeFile(saveTo , content + "\r\n" , true);
     }
 
 

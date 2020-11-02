@@ -11,7 +11,7 @@ class WebImageSaveProcessor extends  Basis {
         super();
     }
 
-    async save(webBook , histroryRecordProcessor){
+    async save(webBook , histroryRecordProcessor , bookMetaProcessor){
         const bookSavePosDir = new EcDirectory(`${WorkSpace.target.getStorageDirectory().Uri()}${webBook.getDomain()}/${webBook.getName()}`  , true);
         const groups = webBook.getGroups();
         if(groups){
@@ -31,6 +31,8 @@ class WebImageSaveProcessor extends  Basis {
                     if(retryImages.length == 0){
                         if( WorkSpace.target.isEnableWriteHistory()) 
                             await histroryRecordProcessor.recordDownloadGroup(webBook , group);
+                        if( WorkSpace.target.isEnableRecordMeta() ) 
+                            bookMetaProcessor.recordNew(webBook , group);
                     }
                 } else {
                     this.log(`Book[${webBook.getName()}] group : ${i+1} / ${groups.length} has no images , skip it!!`);
