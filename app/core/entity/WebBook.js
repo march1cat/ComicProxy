@@ -15,6 +15,8 @@ class WebBook extends Basis{
     name = null;
     entryUrl = null;
 
+    webIndex = null;
+
     constructor(domain){
         super();
         this.domain = domain;
@@ -74,6 +76,14 @@ class WebBook extends Basis{
             values.push(group.getWebImages().length);
         });
         return values.join("");
+    }
+
+    setWebIndex(webIndex){
+        this.webIndex = webIndex;
+    }
+
+    getWebIndex(){
+        return this.webIndex;
     }
 
     embedWebLoaders(){

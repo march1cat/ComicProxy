@@ -63,7 +63,7 @@ class WebIndexProcessor extends Basis {
     }
 
     record(webIndex){
-        if( webIndex.getIndexID() ){
+        if( webIndex &&  webIndex.getIndexID() ){
             const writeText = `${webIndex.getIndexID()} ${webIndex.getDomain()} ${webIndex.getIndexUrl()} @Name=${webIndex.getName()}\r\n`;
             this.fileTool.writeFile(WorkSpace.target.getIndexFile() , writeText , true);
             this.log(`Record new index Url[${webIndex.getIndexUrl()}] , id = ${webIndex.getIndexID()}`);

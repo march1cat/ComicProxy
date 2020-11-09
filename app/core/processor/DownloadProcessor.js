@@ -63,6 +63,7 @@ class DownloadProcessor extends Basis {
         }
         if(isParsingSuccess) {
             const webIndex = await this.webIndexProcessor.buildIndexByBook(webBook);
+            webBook.setWebIndex(webIndex);
             this.webIndexProcessor.record(webIndex);
         }
         
@@ -70,7 +71,7 @@ class DownloadProcessor extends Basis {
             this.log("Prepare save book , Book = "  , webBook.getName());
             await this.webImageSaveProcessor.save(webBook , this.histroryRecordProcessor , this.bookMetaProcessor);
 
-            if( WorkSpace.target.isEnableZipPack() ) await this.packageZipProcessor.pack(webIndex);
+            if( WorkSpace.target.isEnableZipPack() ) await this.packageZipProcessor.pack(webBook.getWebIndex());
         } else {
             this.log("Parsing fail , skip save process , book = " , webBook.getName());
         }

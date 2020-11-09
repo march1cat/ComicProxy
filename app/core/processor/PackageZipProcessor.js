@@ -5,7 +5,6 @@ const Basis = require("../../../libs/ec/system/Basis").Basis;
 const Zipper = require("../../../libs/ec/zip/Zipper").Zipper;
 const FileTool = require("../../../libs/ec/common/FileTool").FileTool;
 const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
-const WebImageSaveProcessor = require("../processor/WebImageSaveProcessor").WebImageSaveProcessor;
 const WorkSpace = require("../env/WorkSpace").WorkSpace;
 class PackageZipProcessor extends Basis {
 
@@ -30,8 +29,13 @@ class PackageZipProcessor extends Basis {
                 let source = bookSavePosDir.Uri() + directoryName;
                 if(this.fileTool.isDirectory(source)) {
                     const saveTo = zipDestination.Uri() + webIndex.getName() + "_" + directoryName + ".zip";
-                    const retryItem = await this.zip(source , saveTo);
-                    if( retryItem ) retryItems.push(retryItem);
+                    if(!this.fileTool.isFileExist(saveTo)) {
+                        this.log(`Zip from ${source} to ${saveTo}`);
+                        const retryItem = await this.zip(source , saveTo);
+                        if( retryItem ) retryItems.push(retryItem);
+                    } else {
+                        this.log(`File ${saveTo} exist , skip zip it!!`);
+                    }
                 }
             }
             if(retryItems) {
