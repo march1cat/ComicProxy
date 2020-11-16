@@ -71,7 +71,7 @@ class DownloadProcessor extends Basis {
             this.log("Prepare save book , Book = "  , webBook.getName());
             await this.webImageSaveProcessor.save(webBook , this.histroryRecordProcessor , this.bookMetaProcessor);
 
-            if( WorkSpace.target.isEnableZipPack() ) await this.packageZipProcessor.pack(webBook.getWebIndex());
+            if( WorkSpace.target.isEnableZipPack() ) await this.packageZipProcessor.pack(webBook);
         } else {
             this.log("Parsing fail , skip save process , book = " , webBook.getName());
         }

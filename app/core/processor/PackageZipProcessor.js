@@ -6,6 +6,10 @@ const Zipper = require("../../../libs/ec/zip/Zipper").Zipper;
 const FileTool = require("../../../libs/ec/common/FileTool").FileTool;
 const EcDirectory = require("../../../libs/ec/common/EcDirectory").EcDirectory;
 const WorkSpace = require("../env/WorkSpace").WorkSpace;
+const WebIndex = require("../entity/WebIndex").WebIndex;
+const WebBook = require("../entity/WebBook").WebBook;
+
+
 class PackageZipProcessor extends Basis {
 
     fileTool = new FileTool();
@@ -16,19 +20,20 @@ class PackageZipProcessor extends Basis {
         super();
     }
 
-    async pack(webIndex){ 
-        this.log("Start Process pack book  , " , webIndex.getName());
-        const bookSavePosDir = new EcDirectory(`${WorkSpace.target.getStorageDirectory().Uri()}${webIndex.getDomain()}/${webIndex.getName()}`  , true);
-        
-        const groups = this.fileTool.viewFiles(bookSavePosDir.Uri());
-        if(groups){
-            const zipDestination = new EcDirectory(`${this.zipStorageDir.Uri()}${webIndex.getDomain()}/${webIndex.getName()}` , true);
+    async pack(target){ 
+        const packAttrs = target instanceof WebIndex ? this.preparePackByWebIndex(target) : this.preparePackByWebBook(target);
+        if(packAttrs){
+            const directoryNames = packAttrs.directoryNames;
+            const bookSavePosDir  = packAttrs.bookSavePosDir;
+            const zipDestination = packAttrs.zipDestination;
+            const bookName = packAttrs.name;
+
             const retryItems = [];
-            for(let i = 0;i < groups.length;i++){
-                let directoryName = groups[i];
+            for(let i = 0;i < directoryNames.length;i++){
+                let directoryName = directoryNames[i];
                 let source = bookSavePosDir.Uri() + directoryName;
                 if(this.fileTool.isDirectory(source)) {
-                    const saveTo = zipDestination.Uri() + webIndex.getName() + "_" + directoryName + ".zip";
+                    const saveTo = zipDestination.Uri() + bookName + "_" + directoryName + ".zip";
                     if(!this.fileTool.isFileExist(saveTo)) {
                         this.log(`Zip from ${source} to ${saveTo}`);
                         const retryItem = await this.zip(source , saveTo);
@@ -37,13 +42,50 @@ class PackageZipProcessor extends Basis {
                         this.log(`File ${saveTo} exist , skip zip it!!`);
                     }
                 }
+                if(this.AppConfig().IsDev) break;
             }
             if(retryItems) {
                 await this.retryProcess(retryItems);
             }
+        }
+    }
+
+    preparePackByWebBook(webBook){
+        this.log("Start Process pack book by web book  , " , webBook.getName());
+        const groups = webBook.getGroups();
+        if(groups && groups.length > 0) {
+            const bookSavePosDir = new EcDirectory(`${WorkSpace.target.getStorageDirectory().Uri()}${webBook.getDomain()}/${webBook.getName()}`  , true);
+            const zipDestination = new EcDirectory(`${this.zipStorageDir.Uri()}${webBook.getDomain()}/${webBook.getName()}` , true);
+            this.log(`Notice (${groups.length}) groups to zip`);
+            const directoryNames = groups.map( group => group.getSerNo());
+            return {
+                bookSavePosDir : bookSavePosDir , 
+                zipDestination : zipDestination ,
+                directoryNames : directoryNames , 
+                name : webBook.getName()
+            }
+        } else {
+            this.log(`No groups to zip`);
+        }
+        return null;
+    }
+
+    preparePackByWebIndex(webIndex){
+        this.log("Start Process pack book by index  , " , webIndex.getName());
+        const bookSavePosDir = new EcDirectory(`${WorkSpace.target.getStorageDirectory().Uri()}${webIndex.getDomain()}/${webIndex.getName()}`  , true);
+        const zipDestination = new EcDirectory(`${this.zipStorageDir.Uri()}${webIndex.getDomain()}/${webIndex.getName()}` , true);
+        const groups = this.fileTool.viewFiles(bookSavePosDir.Uri());
+        if(groups){
+            return {
+                bookSavePosDir : bookSavePosDir , 
+                zipDestination : zipDestination ,
+                directoryNames : groups , 
+                name : webIndex.getName()
+            }
         } else {
             this.log("Not group found for book " + webIndex.getName() + " , path = " + bookSavePosDir.Uri());
         }
+        return null;
     }
 
     async retryProcess(targetItems){

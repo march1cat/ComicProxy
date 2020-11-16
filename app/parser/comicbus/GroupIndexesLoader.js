@@ -3,6 +3,7 @@
 const WebLoader = require("../../core/entity/WebLoader").WebLoader;
 const StringTool = require("../../../libs/ec/common/StringTool").StringTool;
 const Group = require("../../core/entity/Group").Group;
+const iconv = require('iconv-lite'); 
 
 class GroupIndexesLoader extends WebLoader {
 
@@ -57,7 +58,7 @@ class GroupIndexesLoader extends WebLoader {
 
     parsingName(dom){
         const titleDom  = dom.querySelector("title");
-        let title = titleDom.textContent;
+        let title = iconv.decode(titleDom.textContent, "big5");
         const reps = ["最新熱門連載漫畫" , " - 無限動漫 8comic.com comicbus.com"];
         reps.forEach( rep => {
             title = String(title).replace(rep , "");

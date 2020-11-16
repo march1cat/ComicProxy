@@ -23,7 +23,7 @@ class WorkSpace extends Basis {
     constructor(){
         super();
         this.enableWriteHistory = !this.AppConfig().IsDev;
-        this.enableZipPack = !this.AppConfig().IsDev;
+        this.enableZipPack =  !this.AppConfig().IsDev;
         this.enableRecordMeta = !this.AppConfig().IsDev;
     }
 
