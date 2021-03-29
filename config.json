@@ -1,4 +1,5 @@
 {
     "IsDev" : true ,
-    "Storoage" : "/Volumes/64G/Temp/comic" 
+    "Storoage" : "/Volumes/64G/Temp/comic",
+    "zipMode" : true
 }
